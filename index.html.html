@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yasmin & Brayan • Wedding Planner</title>
+<style>
+*{box-sizing:border-box}
+:root{--off:#F7F5F1;--sage:#5F6F5A;--sage-dark:#3F5242;--gold:#D8C6A3;--beige:#ECE7DC;--paper:#fffdf8;--muted:#6b7469;--danger:#9b3d35}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--off);color:var(--sage-dark)}
+.app{display:flex;min-height:100vh}.sidebar{width:260px;background:linear-gradient(180deg,var(--sage-dark),var(--sage));color:white;padding:22px;position:sticky;top:0;height:100vh;border-right:1px solid var(--gold)}
+.brand{font-size:23px;font-weight:800;margin-bottom:4px;letter-spacing:1px}.brand::before{content:'B&Y';display:block;width:72px;height:72px;line-height:72px;text-align:center;border:1px solid var(--gold);border-radius:50%;color:var(--gold);font-family:Georgia,serif;font-size:25px;margin-bottom:14px;background:rgba(255,255,255,.06)}
+.subtitle{font-size:13px;opacity:.9;margin-bottom:24px}.menu button{display:block;width:100%;border:1px solid rgba(216,198,163,.28);background:rgba(255,255,255,.10);color:white;padding:12px;border-radius:10px;margin-bottom:10px;text-align:left;font-weight:700;cursor:pointer}.menu button.active,.menu button:hover{background:var(--paper);color:var(--sage-dark);border-color:var(--gold)}
+.content{flex:1}.topbar{background:var(--paper);padding:22px 28px;border-bottom:1px solid var(--gold)}.topbar h1{margin:0;color:var(--sage-dark);font-family:Georgia,serif;letter-spacing:1.5px}.topbar p{margin:6px 0 0;color:var(--muted);letter-spacing:.4px}.container{padding:24px;max-width:1320px}.tab{display:none}.tab.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:20px}.card{background:var(--paper);border-radius:16px;padding:18px;box-shadow:0 8px 22px rgba(63,82,66,.10);border:1px solid var(--gold);border-left:5px solid var(--sage)}.card span{font-size:13px;font-weight:700;color:var(--muted)}.card strong{display:block;font-size:24px;color:var(--sage-dark);margin-top:8px}.panel{background:var(--paper);border-radius:16px;padding:20px;box-shadow:0 8px 22px rgba(63,82,66,.10);margin-bottom:20px;border:1px solid var(--gold)}.panel h2{margin-top:0;color:var(--sage-dark);font-family:Georgia,serif}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}label{font-size:13px;font-weight:700;color:var(--sage-dark)}input,select,textarea{width:100%;padding:10px;border:1px solid var(--gold);border-radius:9px;margin-top:5px;font-family:inherit;background:#fff}textarea{min-height:42px;resize:vertical}.btn{border:0;border-radius:9px;background:var(--sage);color:white;padding:11px 14px;font-weight:800;cursor:pointer}.btn:hover{background:var(--sage-dark)}.btn.secondary{background:var(--gold);color:var(--sage-dark)}.btn.danger{background:var(--danger);color:white}.btn.small{padding:7px 10px;font-size:12px}table{width:100%;border-collapse:collapse;background:var(--paper);border-radius:14px;overflow:hidden;box-shadow:0 8px 22px rgba(63,82,66,.08);border:1px solid var(--gold)}th,td{padding:12px;border-bottom:1px solid #e8dfcf;text-align:left;font-size:14px}th{background:var(--sage-dark);color:white}tr:hover{background:#faf7ef}.actions{display:flex;gap:6px;flex-wrap:wrap}.status{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;display:inline-block}.pago,.sim,.feito{background:#e4f0df;color:#315333}.parcial,.andamento,.talvez{background:#fbf0d7;color:#7a5b1c}.pendente,.nao{background:#f3dfdc;color:#7d2d27}.progress{height:16px;background:#eee6d8;border-radius:999px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--sage),var(--gold));width:0%;transition:.3s}.two-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.top-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.muted{color:var(--muted);font-size:13px}.countdown{font-size:32px;font-weight:900;color:var(--sage-dark)}.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--beige);color:var(--sage-dark);font-weight:800;font-size:12px;border:1px solid var(--gold)}
+@media(max-width:860px){.app{display:block}.sidebar{width:100%;height:auto;position:relative}.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.menu button{margin:0}.two-cols{grid-template-columns:1fr}.container{padding:16px}table,thead,tbody,th,td,tr{display:block}thead{display:none}tr{margin-bottom:12px;border:1px solid #e5ddce;border-radius:12px;background:white;overflow:hidden}td{border-bottom:1px solid #eee}td::before{content:attr(data-label);display:block;font-weight:800;color:var(--sage-dark);margin-bottom:4px}}
+</style>
+
+<style>
+.hero-subtitle{
+  text-align:center;
+  margin-top:10px;
+  color:#3F5242;
+}
+.hero-subtitle .wedding-date{
+  font-size:18px;
+  letter-spacing:.5px;
+  margin-bottom:8px;
+}
+.hero-subtitle .forever-text{
+  font-style:italic;
+  margin:6px 0 12px;
+}
+.hero-subtitle blockquote{
+  margin:10px auto 0;
+  max-width:720px;
+  color:#5F6F5A;
+  font-style:italic;
+  line-height:1.6;
+}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Wedding Planner</div>
+    <div class="subtitle">Yasmin & Brayan • 21/11/2026</div>
+    <div class="menu">
+      <button class="active" onclick="showTab('dashboard',this)">Dashboard</button>
+      <button onclick="showTab('gastos',this)">Gastos</button>
+      <button onclick="showTab('convidados',this)">Convidados</button>
+      <button onclick="showTab('orcamentos',this)">Orçamentos</button>
+      <button onclick="showTab('checklist',this)">Checklist</button>
+      <button onclick="showTab('pendentes',this)">Pendentes</button>
+    </div>
+  </aside>
+  <div class="content">
+    <div class="topbar"><h1>Yasmin Azeredo & Brayan Mothé</h1><p><em>“Tudo tem o seu tempo determinado...” — Eclesiastes 3:1</em><br></p></div>
+    <main class="container">
+      <section id="dashboard" class="tab active">
+        <div class="cards">
+          <div class="card"><span>Total contratado</span><strong id="totalCasamento">R$ 0,00</strong></div>
+          <div class="card"><span>Total pago</span><strong id="totalPago">R$ 0,00</strong></div>
+          <div class="card"><span>Falta pagar</span><strong id="totalFalta">R$ 0,00</strong></div>
+          <div class="card"><span>Presentes recebidos</span><strong id="totalPresentes">R$ 0,00</strong></div>
+          <div class="card"><span>Custo líquido</span><strong id="custoLiquido">R$ 0,00</strong></div>
+          <div class="card"><span>Convidados</span><strong id="totalConvidados">0</strong></div>
+          <div class="card"><span>Confirmados</span><strong id="totalConfirmados">0</strong></div>
+          <div class="card"><span>Pendentes RSVP</span><strong id="totalPendentes">0</strong></div>
+          <div class="card"><span>Crianças</span><strong id="totalCriancas">0</strong></div>
+          <div class="card"><span>Custo por convidado</span><strong id="custoConvidado">R$ 0,00</strong></div>
+        </div>
+        <div class="two-cols">
+          <div class="panel"><h2>Contagem regressiva</h2><div class="countdown" id="diasCasamento">0 dias</div><p class="muted" id="semanasCasamento"></p><span class="badge">Data: 21/11/2026</span></div>
+          <div class="panel"><h2>Progresso do checklist</h2><div class="progress"><div id="barraChecklist"></div></div><p><strong id="percentChecklist">0%</strong> concluído • <span id="qtdChecklist">0/0 tarefas</span></p></div>
+        </div>
+      </section>
+
+      <section id="gastos" class="tab">
+        <div class="panel"><h2>Adicionar gasto</h2><form id="formGasto" class="form-grid">
+          <label>Categoria<select id="gCategoria"><option>Buffet</option><option>Decoração</option><option>Salão</option><option>Fotografia</option><option>Filmagem</option><option>Vestido</option><option>Traje</option><option>Som/DJ</option><option>Convites</option><option>Doces</option><option>Bolo</option><option>Igreja</option><option>Lua de Mel</option><option>Outro</option></select></label>
+          <label>Item/Fornecedor<input id="gItem" required placeholder="Ex: Buffet / Decoração"></label>
+          <label>Valor total<input id="gValor" type="number" step="0.01" required></label>
+          <label>Entrada/valor pago<input id="gEntrada" type="number" step="0.01" value="0"></label>
+          <label>Vencimento<input id="gVencimento" type="date"></label>
+          <label>Observações<input id="gObs" placeholder="Opcional"></label>
+          <button class="btn" type="submit">Salvar gasto</button>
+        </form></div>
+        <div class="top-actions"><button class="btn secondary" onclick="exportarDados()">Exportar backup</button><button class="btn danger" onclick="limparTudo()">Limpar sistema</button></div>
+        <table><thead><tr><th>Categoria</th><th>Item</th><th>Total</th><th>Pago</th><th>Falta</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead><tbody id="listaGastos"></tbody></table>
+      </section>
+
+      <section id="convidados" class="tab">
+        <div class="panel"><h2>Adicionar convidado</h2><form id="formConvidado" class="form-grid">
+          <label>Nome<input id="cNome" required placeholder="Nome completo"></label>
+          <label>Grupo<select id="cGrupo"><option>Família</option><option>Amigos</option><option>Padrinhos</option><option>Igreja</option><option>Trabalho</option><option>Outro</option></select></label>
+          <label>Tipo<select id="cTipo"><option>Adulto</option><option>Criança</option></select></label>
+          <label>Confirmação<select id="cConfirmacao"><option>Pendente</option><option>Confirmado</option><option>Não irá</option></select></label>
+          <label>Presente recebido R$<input id="cPresente" type="number" step="0.01" value="0"></label>
+          <label>Tipo de presente<select id="cTipoPresente"><option>Nenhum</option><option>PIX</option><option>Lista de presentes</option><option>Dinheiro</option><option>Objeto</option><option>Outro</option></select></label>
+          <label>Observações<input id="cObs" placeholder="Opcional"></label>
+          <button class="btn" type="submit">Salvar convidado</button>
+        </form></div>
+        <table><thead><tr><th>Nome</th><th>Grupo</th><th>Tipo</th><th>Confirmação</th><th>Presente</th><th>Tipo presente</th><th>Obs.</th><th>Ações</th></tr></thead><tbody id="listaConvidados"></tbody></table>
+      </section>
+
+      <section id="orcamentos" class="tab">
+        <div class="panel"><h2>Adicionar orçamento</h2><form id="formOrcamento" class="form-grid">
+          <label>Categoria<input id="oCategoria" required placeholder="Ex: Decoração"></label>
+          <label>Fornecedor<input id="oFornecedor" required placeholder="Nome do fornecedor"></label>
+          <label>Valor<input id="oValor" type="number" step="0.01" required></label>
+          <label>Incluso<input id="oIncluso" placeholder="O que está incluso"></label>
+          <label>Forma de pagamento<input id="oPagamento" placeholder="Ex: entrada + parcelas"></label>
+          <label>Escolhido?<select id="oMelhor"><option>Não</option><option>Sim</option></select></label>
+          <button class="btn" type="submit">Salvar orçamento</button>
+        </form></div>
+        <table><thead><tr><th>Categoria</th><th>Fornecedor</th><th>Valor</th><th>Incluso</th><th>Pagamento</th><th>Escolhido?</th><th>Ações</th></tr></thead><tbody id="listaOrcamentos"></tbody></table>
+      </section>
+
+      <section id="checklist" class="tab">
+        <div class="panel"><h2>Adicionar tarefa</h2><form id="formChecklist" class="form-grid">
+          <label>Categoria<select id="kCategoria"><option>Documentação/Igreja</option><option>Noivos</option><option>Convites</option><option>Recepção</option><option>Festa</option><option>Lua de Mel</option><option>Outro</option></select></label>
+          <label>Tarefa<input id="kTarefa" required placeholder="Ex: Fechar buffet"></label>
+          <label>Prazo<input id="kPrazo" type="date"></label>
+          <label>Status<select id="kStatus"><option>Pendente</option><option>Em andamento</option><option>Concluído</option></select></label>
+          <label>Observações<input id="kObs" placeholder="Opcional"></label>
+          <button class="btn" type="submit">Salvar tarefa</button>
+        </form></div>
+        <table><thead><tr><th>Categoria</th><th>Tarefa</th><th>Prazo</th><th>Status</th><th>Obs.</th><th>Ações</th></tr></thead><tbody id="listaChecklist"></tbody></table>
+      </section>
+
+      <section id="pendentes" class="tab">
+        <div class="panel"><h2>Pagamentos pendentes</h2><p class="muted">Lista automática dos itens que ainda possuem saldo a pagar.</p></div>
+        <table><thead><tr><th>Fornecedor/Item</th><th>Categoria</th><th>Falta pagar</th><th>Vencimento</th><th>Status</th></tr></thead><tbody id="listaPendentes"></tbody></table>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+const DATA_CASAMENTO = new Date('2026-11-21T09:30:00');
+let gastos = JSON.parse(localStorage.getItem('gastosCasamento')) || [];
+let convidados = JSON.parse(localStorage.getItem('convidadosCasamento')) || [];
+let orcamentos = JSON.parse(localStorage.getItem('orcamentosCasamento')) || [];
+let checklist = JSON.parse(localStorage.getItem('checklistCasamento')) || [
+ {categoria:'Documentação/Igreja', tarefa:'Separar documentação da igreja', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Documentação/Igreja', tarefa:'Fazer curso de noivos', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Noivos', tarefa:'Definir vestido da noiva', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Noivos', tarefa:'Definir terno do noivo', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Recepção', tarefa:'Fechar buffet', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Recepção', tarefa:'Fechar decoração', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Festa', tarefa:'Contratar som/DJ', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Convites', tarefa:'Enviar convites', prazo:'', status:'Pendente', obs:''},
+ {categoria:'Lua de Mel', tarefa:'Definir lua de mel', prazo:'', status:'Pendente', obs:''}
+];
+let editGasto=null, editConvidado=null, editOrcamento=null, editChecklist=null;
+function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}function esc(v){return String(v??'').replace(/[&<>"]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));}
+function salvar(){localStorage.setItem('gastosCasamento',JSON.stringify(gastos));localStorage.setItem('convidadosCasamento',JSON.stringify(convidados));localStorage.setItem('orcamentosCasamento',JSON.stringify(orcamentos));localStorage.setItem('checklistCasamento',JSON.stringify(checklist));render();}
+function showTab(id,btn){document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function statusGasto(total,pago){if(pago>=total&&total>0)return['Pago','pago'];if(pago>0)return['Parcial','parcial'];return['Pendente','pendente'];}
+function statusClass(s){if(s==='Concluído'||s==='Confirmado')return'feito';if(s==='Em andamento'||s==='Pendente')return'andamento';return'pendente';}
+formGasto.addEventListener('submit',e=>{e.preventDefault();const obj={categoria:gCategoria.value,item:gItem.value,valor:+gValor.value,entrada:+gEntrada.value||0,vencimento:gVencimento.value,obs:gObs.value};editGasto!==null?(gastos[editGasto]=obj,editGasto=null):gastos.push(obj);e.target.reset();gEntrada.value=0;salvar();});
+formConvidado.addEventListener('submit',e=>{e.preventDefault();const obj={nome:cNome.value,grupo:cGrupo.value,tipo:cTipo.value,confirmacao:cConfirmacao.value,presente:+cPresente.value||0,tipoPresente:cTipoPresente.value,obs:cObs.value};editConvidado!==null?(convidados[editConvidado]=obj,editConvidado=null):convidados.push(obj);e.target.reset();cPresente.value=0;salvar();});
+formOrcamento.addEventListener('submit',e=>{e.preventDefault();const obj={categoria:oCategoria.value,fornecedor:oFornecedor.value,valor:+oValor.value,incluso:oIncluso.value,pagamento:oPagamento.value,melhor:oMelhor.value};editOrcamento!==null?(orcamentos[editOrcamento]=obj,editOrcamento=null):orcamentos.push(obj);e.target.reset();salvar();});
+formChecklist.addEventListener('submit',e=>{e.preventDefault();const obj={categoria:kCategoria.value,tarefa:kTarefa.value,prazo:kPrazo.value,status:kStatus.value,obs:kObs.value};editChecklist!==null?(checklist[editChecklist]=obj,editChecklist=null):checklist.push(obj);e.target.reset();salvar();});
+function editarGasto(i){const g=gastos[i];editGasto=i;gCategoria.value=g.categoria;gItem.value=g.item;gValor.value=g.valor;gEntrada.value=g.entrada;gVencimento.value=g.vencimento;gObs.value=g.obs||'';showTab('gastos',document.querySelectorAll('.menu button')[1]);}
+function excluirGasto(i){if(confirm('Excluir este gasto?')){gastos.splice(i,1);salvar();}}
+function editarConvidado(i){const c=convidados[i];editConvidado=i;cNome.value=c.nome;cGrupo.value=c.grupo;cTipo.value=c.tipo;cConfirmacao.value=c.confirmacao;cPresente.value=c.presente||0;cTipoPresente.value=c.tipoPresente||'Nenhum';cObs.value=c.obs||'';showTab('convidados',document.querySelectorAll('.menu button')[2]);}
+function excluirConvidado(i){if(confirm('Excluir este convidado?')){convidados.splice(i,1);salvar();}}
+function editarOrcamento(i){const o=orcamentos[i];editOrcamento=i;oCategoria.value=o.categoria;oFornecedor.value=o.fornecedor;oValor.value=o.valor;oIncluso.value=o.incluso||'';oPagamento.value=o.pagamento||'';oMelhor.value=o.melhor;showTab('orcamentos',document.querySelectorAll('.menu button')[3]);}
+function excluirOrcamento(i){if(confirm('Excluir este orçamento?')){orcamentos.splice(i,1);salvar();}}
+function editarChecklist(i){const k=checklist[i];editChecklist=i;kCategoria.value=k.categoria;kTarefa.value=k.tarefa;kPrazo.value=k.prazo||'';kStatus.value=k.status;kObs.value=k.obs||'';showTab('checklist',document.querySelectorAll('.menu button')[4]);}
+function excluirChecklist(i){if(confirm('Excluir esta tarefa?')){checklist.splice(i,1);salvar();}}
+function render(){const total=gastos.reduce((s,g)=>s+(+g.valor||0),0),pago=gastos.reduce((s,g)=>s+(+g.entrada||0),0),falta=total-pago,presentes=convidados.reduce((s,c)=>s+(+c.presente||0),0),confirmados=convidados.filter(c=>c.confirmacao==='Confirmado').length,pendentes=convidados.filter(c=>c.confirmacao==='Pendente').length,criancas=convidados.filter(c=>c.tipo==='Criança').length;totalCasamento.textContent=money(total);totalPago.textContent=money(pago);totalFalta.textContent=money(falta);totalPresentes.textContent=money(presentes);custoLiquido.textContent=money(total-presentes);totalConvidados.textContent=convidados.length;totalConfirmados.textContent=confirmados;totalPendentes.textContent=pendentes;totalCriancas.textContent=criancas;custoConvidado.textContent=money(convidados.length?total/convidados.length:0);
+const diff=Math.ceil((DATA_CASAMENTO-new Date())/86400000);diasCasamento.textContent=diff>0?diff+' dias':`Casados há ${Math.abs(diff)} dias`;semanasCasamento.textContent=diff>0?`Aproximadamente ${Math.ceil(diff/7)} semanas restantes.`:'Que seja uma linda lembrança desse dia!';const concluidas=checklist.filter(k=>k.status==='Concluído').length, totalK=checklist.length, perc=totalK?Math.round(concluidas/totalK*100):0;barraChecklist.style.width=perc+'%';percentChecklist.textContent=perc+'%';qtdChecklist.textContent=`${concluidas}/${totalK} tarefas`;
+listaGastos.innerHTML=gastos.map((g,i)=>{const f=(+g.valor||0)-(+g.entrada||0),st=statusGasto(+g.valor,+g.entrada);return`<tr><td data-label="Categoria">${esc(g.categoria)}</td><td data-label="Item">${esc(g.item)}</td><td data-label="Total">${money(g.valor)}</td><td data-label="Pago">${money(g.entrada)}</td><td data-label="Falta">${money(f)}</td><td data-label="Vencimento">${g.vencimento||'-'}</td><td data-label="Status"><span class="status ${st[1]}">${st[0]}</span></td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarGasto(${i})">Editar</button><button class="btn danger small" onclick="excluirGasto(${i})">Excluir</button></td></tr>`}).join('');
+listaConvidados.innerHTML=convidados.map((c,i)=>`<tr><td data-label="Nome">${esc(c.nome)}</td><td data-label="Grupo">${esc(c.grupo)}</td><td data-label="Tipo">${esc(c.tipo)}</td><td data-label="Confirmação"><span class="status ${c.confirmacao==='Confirmado'?'sim':c.confirmacao==='Não irá'?'nao':'talvez'}">${esc(c.confirmacao)}</span></td><td data-label="Presente">${money(c.presente)}</td><td data-label="Tipo presente">${esc(c.tipoPresente||'Nenhum')}</td><td data-label="Obs.">${esc(c.obs)||'-'}</td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarConvidado(${i})">Editar</button><button class="btn danger small" onclick="excluirConvidado(${i})">Excluir</button></td></tr>`).join('');
+listaOrcamentos.innerHTML=orcamentos.map((o,i)=>`<tr><td data-label="Categoria">${esc(o.categoria)}</td><td data-label="Fornecedor">${esc(o.fornecedor)}</td><td data-label="Valor">${money(o.valor)}</td><td data-label="Incluso">${esc(o.incluso)||'-'}</td><td data-label="Pagamento">${esc(o.pagamento)||'-'}</td><td data-label="Escolhido?">${esc(o.melhor)}</td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarOrcamento(${i})">Editar</button><button class="btn danger small" onclick="excluirOrcamento(${i})">Excluir</button></td></tr>`).join('');
+listaChecklist.innerHTML=checklist.map((k,i)=>`<tr><td data-label="Categoria">${esc(k.categoria)}</td><td data-label="Tarefa">${esc(k.tarefa)}</td><td data-label="Prazo">${k.prazo||'-'}</td><td data-label="Status"><span class="status ${statusClass(k.status)}">${esc(k.status)}</span></td><td data-label="Obs.">${esc(k.obs)||'-'}</td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarChecklist(${i})">Editar</button><button class="btn danger small" onclick="excluirChecklist(${i})">Excluir</button></td></tr>`).join('');
+listaPendentes.innerHTML=gastos.filter(g=>((+g.valor||0)-(+g.entrada||0))>0).map(g=>{const f=(+g.valor||0)-(+g.entrada||0),st=statusGasto(+g.valor,+g.entrada);return`<tr><td data-label="Fornecedor/Item">${esc(g.item)}</td><td data-label="Categoria">${esc(g.categoria)}</td><td data-label="Falta pagar">${money(f)}</td><td data-label="Vencimento">${g.vencimento||'-'}</td><td data-label="Status"><span class="status ${st[1]}">${st[0]}</span></td></tr>`}).join('');}
+function exportarDados(){const dados={gastos,convidados,orcamentos,checklist,exportadoEm:new Date().toLocaleString('pt-BR')};const blob=new Blob([JSON.stringify(dados,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-casamento-yasmin-brayan.json';a.click();}
+function limparTudo(){if(confirm('Tem certeza que deseja apagar todos os dados?')){gastos=[];convidados=[];orcamentos=[];checklist=[];salvar();}}
+render();
+</script>
+</body>
+</html>

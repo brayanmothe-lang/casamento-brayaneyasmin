@@ -104,7 +104,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--off);color
     </div>
   </aside>
   <div class="content">
-    <div class="topbar"><h1>Yasmin Azeredo & Brayan Mothé</h1><p><em>“Tudo tem o seu tempo determinado...” — Eclesiastes 3:1</em><br></p></div>
+    <div class="topbar"><h1>Yasmin Azeredo & Brayan Mothé</h1><small style="display:inline-block;margin-top:8px;padding:6px 10px;border:1px solid var(--gold);border-radius:999px;color:var(--sage-dark);background:var(--paper)">Firebase conectado • salvamento online</small><p><em>“Tudo tem o seu tempo determinado...” — Eclesiastes 3:1</em><br></p></div>
     <main class="container">
       <section id="dashboard" class="tab active">
         <div class="cards">
@@ -220,12 +220,27 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--off);color
     </main>
   </div>
 </div>
-<script>
+<script type="module">
 const DATA_CASAMENTO = new Date('2026-11-21T09:30:00');
-let gastos = JSON.parse(localStorage.getItem('gastosCasamento')) || [];
-let convidados = JSON.parse(localStorage.getItem('convidadosCasamento')) || [];
-let orcamentos = JSON.parse(localStorage.getItem('orcamentosCasamento')) || [];
-let checklist = JSON.parse(localStorage.getItem('checklistCasamento')) || [
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDtHNZZ3hxSf8sZNvCgPdQ1BYMn9fNwCAQ",
+  authDomain: "casamento-68628.firebaseapp.com",
+  projectId: "casamento-68628",
+  storageBucket: "casamento-68628.firebasestorage.app",
+  messagingSenderId: "642935640512",
+  appId: "1:642935640512:web:2fde51e5f1d4957a213825",
+  measurementId: "G-C85KB9TP7L"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const dadosRef = doc(db, "weddingPlanner", "dadosPrincipais");
+
+const checklistPadrao = [
  {categoria:'Documentação/Igreja', tarefa:'Separar documentação da igreja', prazo:'', status:'Pendente', obs:''},
  {categoria:'Documentação/Igreja', tarefa:'Fazer curso de noivos', prazo:'', status:'Pendente', obs:''},
  {categoria:'Noivos', tarefa:'Definir vestido da noiva', prazo:'', status:'Pendente', obs:''},
@@ -236,9 +251,34 @@ let checklist = JSON.parse(localStorage.getItem('checklistCasamento')) || [
  {categoria:'Convites', tarefa:'Enviar convites', prazo:'', status:'Pendente', obs:''},
  {categoria:'Lua de Mel', tarefa:'Definir lua de mel', prazo:'', status:'Pendente', obs:''}
 ];
+
+let gastos = JSON.parse(localStorage.getItem('gastosCasamento')) || [];
+let convidados = JSON.parse(localStorage.getItem('convidadosCasamento')) || [];
+let orcamentos = JSON.parse(localStorage.getItem('orcamentosCasamento')) || [];
+let checklist = JSON.parse(localStorage.getItem('checklistCasamento')) || checklistPadrao;
+let firebaseCarregado = false;
 let editGasto=null, editConvidado=null, editOrcamento=null, editChecklist=null;
 function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}function esc(v){return String(v??'').replace(/[&<>"]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));}
-function salvar(){localStorage.setItem('gastosCasamento',JSON.stringify(gastos));localStorage.setItem('convidadosCasamento',JSON.stringify(convidados));localStorage.setItem('orcamentosCasamento',JSON.stringify(orcamentos));localStorage.setItem('checklistCasamento',JSON.stringify(checklist));render();}
+async function salvar(){
+  localStorage.setItem('gastosCasamento',JSON.stringify(gastos));
+  localStorage.setItem('convidadosCasamento',JSON.stringify(convidados));
+  localStorage.setItem('orcamentosCasamento',JSON.stringify(orcamentos));
+  localStorage.setItem('checklistCasamento',JSON.stringify(checklist));
+  render();
+
+  try{
+    await setDoc(dadosRef,{
+      gastos,
+      convidados,
+      orcamentos,
+      checklist,
+      atualizadoEm: serverTimestamp()
+    }, { merge:true });
+  }catch(error){
+    alert('Não consegui salvar no Firebase. Verifique se o Firestore está ativo e se as regras permitem gravação.');
+    console.error(error);
+  }
+}
 function showTab(id,btn){document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function statusGasto(total,pago){if(pago>=total&&total>0)return['Pago','pago'];if(pago>0)return['Parcial','parcial'];return['Pendente','pendente'];}
 function statusClass(s){if(s==='Concluído'||s==='Confirmado')return'feito';if(s==='Em andamento'||s==='Pendente')return'andamento';return'pendente';}
@@ -263,6 +303,47 @@ listaChecklist.innerHTML=checklist.map((k,i)=>`<tr><td data-label="Categoria">${
 listaPendentes.innerHTML=gastos.filter(g=>((+g.valor||0)-(+g.entrada||0))>0).map(g=>{const f=(+g.valor||0)-(+g.entrada||0),st=statusGasto(+g.valor,+g.entrada);return`<tr><td data-label="Fornecedor/Item">${esc(g.item)}</td><td data-label="Categoria">${esc(g.categoria)}</td><td data-label="Falta pagar">${money(f)}</td><td data-label="Vencimento">${g.vencimento||'-'}</td><td data-label="Status"><span class="status ${st[1]}">${st[0]}</span></td></tr>`}).join('');}
 function exportarDados(){const dados={gastos,convidados,orcamentos,checklist,exportadoEm:new Date().toLocaleString('pt-BR')};const blob=new Blob([JSON.stringify(dados,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-casamento-yasmin-brayan.json';a.click();}
 function limparTudo(){if(confirm('Tem certeza que deseja apagar todos os dados?')){gastos=[];convidados=[];orcamentos=[];checklist=[];salvar();}}
+Object.assign(window,{
+  showTab,
+  editarGasto, excluirGasto,
+  editarConvidado, excluirConvidado,
+  editarOrcamento, excluirOrcamento,
+  editarChecklist, excluirChecklist,
+  exportarDados, limparTudo
+});
+
+onSnapshot(dadosRef, async (snapshot)=>{
+  if(snapshot.exists()){
+    const dados = snapshot.data();
+    gastos = dados.gastos || [];
+    convidados = dados.convidados || [];
+    orcamentos = dados.orcamentos || [];
+    checklist = dados.checklist && dados.checklist.length ? dados.checklist : checklistPadrao;
+
+    localStorage.setItem('gastosCasamento',JSON.stringify(gastos));
+    localStorage.setItem('convidadosCasamento',JSON.stringify(convidados));
+    localStorage.setItem('orcamentosCasamento',JSON.stringify(orcamentos));
+    localStorage.setItem('checklistCasamento',JSON.stringify(checklist));
+    firebaseCarregado = true;
+    render();
+  }else{
+    await setDoc(dadosRef,{
+      gastos,
+      convidados,
+      orcamentos,
+      checklist,
+      criadoEm: serverTimestamp(),
+      atualizadoEm: serverTimestamp()
+    }, { merge:true });
+    firebaseCarregado = true;
+    render();
+  }
+}, (error)=>{
+  console.error(error);
+  alert('Firebase conectado no código, mas o Firestore ainda não liberou leitura/gravação. Confira se o Firestore foi criado e ajuste as regras.');
+  render();
+});
+
 render();
 </script>
 

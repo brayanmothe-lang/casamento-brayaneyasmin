@@ -40,6 +40,54 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--off);color
 }
 </style>
 
+
+<style>
+.filter-box{
+  background:#fffdf8;
+  border:1px solid #d8c6a3;
+  border-radius:18px;
+  padding:18px 22px;
+  margin:20px 0;
+  box-shadow:0 8px 20px rgba(63,82,66,.06);
+}
+.filter-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr auto;
+  gap:14px;
+  align-items:end;
+}
+.filter-grid label{
+  display:block;
+  font-weight:700;
+  margin-bottom:6px;
+  color:#3f5242;
+}
+.filter-grid input,
+.filter-grid select{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid #d8c6a3;
+  border-radius:10px;
+  background:#fffdf8;
+  color:#3f5242;
+}
+.filter-grid button{
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  background:#5f6f5a;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.filter-grid button:hover{
+  background:#3f5242;
+}
+@media(max-width:900px){
+  .filter-grid{grid-template-columns:1fr;}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -127,7 +175,42 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--off);color
           <label>Observações<input id="kObs" placeholder="Opcional"></label>
           <button class="btn" type="submit">Salvar tarefa</button>
         </form></div>
-        <table><thead><tr><th>Categoria</th><th>Tarefa</th><th>Prazo</th><th>Status</th><th>Obs.</th><th>Ações</th></tr></thead><tbody id="listaChecklist"></tbody></table>
+        
+<div class="filter-box" id="checklistFilters">
+  <div class="filter-grid">
+    <div>
+      <label>Pesquisar tarefa</label>
+      <input type="text" id="searchChecklist" placeholder="Digite para pesquisar por tarefa, categoria ou observação">
+    </div>
+    <div>
+      <label>Categoria</label>
+      <select id="filterChecklistCategory">
+        <option value="">Todas</option>
+        <option value="Documentação/Igreja">Documentação/Igreja</option>
+        <option value="Noivos">Noivos</option>
+        <option value="Recepção">Recepção</option>
+        <option value="Festa">Festa</option>
+        <option value="Convites">Convites</option>
+        <option value="Lua de Mel">Lua de Mel</option>
+        <option value="Outros">Outros</option>
+      </select>
+    </div>
+    <div>
+      <label>Status</label>
+      <select id="filterChecklistStatus">
+        <option value="">Todos</option>
+        <option value="Pendente">Pendente</option>
+        <option value="Em andamento">Em andamento</option>
+        <option value="Concluído">Concluído</option>
+      </select>
+    </div>
+    <div>
+      <button type="button" onclick="clearChecklistFilters()">Limpar</button>
+    </div>
+  </div>
+</div>
+
+<table><thead><tr><th>Categoria</th><th>Tarefa</th><th>Prazo</th><th>Status</th><th>Obs.</th><th>Ações</th></tr></thead><tbody id="listaChecklist"></tbody></table>
       </section>
 
       <section id="pendentes" class="tab">
@@ -182,5 +265,66 @@ function exportarDados(){const dados={gastos,convidados,orcamentos,checklist,exp
 function limparTudo(){if(confirm('Tem certeza que deseja apagar todos os dados?')){gastos=[];convidados=[];orcamentos=[];checklist=[];salvar();}}
 render();
 </script>
+
+<script>
+function normalizeTextWedding(value){
+  return (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function filterChecklistRows(){
+  const filtersBox = document.getElementById('checklistFilters');
+  if(!filtersBox) return;
+
+  const search = normalizeTextWedding(document.getElementById('searchChecklist')?.value || '');
+  const category = normalizeTextWedding(document.getElementById('filterChecklistCategory')?.value || '');
+  const status = normalizeTextWedding(document.getElementById('filterChecklistStatus')?.value || '');
+
+  let table = filtersBox.nextElementSibling;
+  while(table && table.tagName !== 'TABLE'){
+    table = table.nextElementSibling;
+  }
+  if(!table) table = document.querySelector('table');
+  if(!table) return;
+
+  const rows = table.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    const rowCategory = normalizeTextWedding(cells[0]?.innerText || '');
+    const rowTask = normalizeTextWedding(cells[1]?.innerText || '');
+    const rowStatus = normalizeTextWedding(cells[3]?.innerText || '');
+    const rowObs = normalizeTextWedding(cells[4]?.innerText || '');
+    const fullText = `${rowCategory} ${rowTask} ${rowStatus} ${rowObs}`;
+
+    const matchSearch = !search || fullText.includes(search);
+    const matchCategory = !category || rowCategory.includes(category);
+    const matchStatus = !status || rowStatus.includes(status);
+
+    row.style.display = matchSearch && matchCategory && matchStatus ? '' : 'none';
+  });
+}
+
+function clearChecklistFilters(){
+  const search = document.getElementById('searchChecklist');
+  const category = document.getElementById('filterChecklistCategory');
+  const status = document.getElementById('filterChecklistStatus');
+  if(search) search.value = '';
+  if(category) category.value = '';
+  if(status) status.value = '';
+  filterChecklistRows();
+}
+
+document.addEventListener('input', function(e){
+  if(e.target && ['searchChecklist','filterChecklistCategory','filterChecklistStatus'].includes(e.target.id)){
+    filterChecklistRows();
+  }
+});
+
+document.addEventListener('change', function(e){
+  if(e.target && ['searchChecklist','filterChecklistCategory','filterChecklistStatus'].includes(e.target.id)){
+    filterChecklistRows();
+  }
+});
+</script>
+
 </body>
 </html>

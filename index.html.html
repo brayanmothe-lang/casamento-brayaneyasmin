@@ -129,8 +129,16 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--off);color
         <div class="panel"><h2>Adicionar gasto</h2><form id="formGasto" class="form-grid">
           <label>Categoria<select id="gCategoria"><option>Buffet</option><option>Decoração</option><option>Salão</option><option>Fotografia</option><option>Filmagem</option><option>Vestido</option><option>Traje</option><option>Som/DJ</option><option>Convites</option><option>Doces</option><option>Bolo</option><option>Igreja</option><option>Lua de Mel</option><option>Outro</option></select></label>
           <label>Item/Fornecedor<input id="gItem" required placeholder="Ex: Buffet / Decoração"></label>
-          <label>Valor total<input id="gValor" type="number" step="0.01" required></label>
-          <label>Entrada/valor pago<input id="gEntrada" type="number" step="0.01" value="0"></label>
+          <label>Valor total<input id="gValor" oninput="calcularEntradaPercentual()" type="number" step="0.01" required></label>
+          <label>Entrada/valor pago<input id="gEntrada" type="number" step="0.01" value="0">
+        <label>Tipo de lançamento</label>
+        <select id="gTipoCalculo" onchange="calcularEntradaPercentual()">
+          <option value="manual">Valor manual</option>
+          <option value="percentual">Entrada por %</option>
+          <option value="orcamento">Orçamento sem entrada</option>
+        </select>
+        <label>% da entrada</label>
+        <input type="number" id="gPercentual" min="0" max="100" step="0.01" placeholder="Ex: 30" oninput="calcularEntradaPercentual()"></label>
           <label>Vencimento<input id="gVencimento" type="date"></label>
           <label>Observações<input id="gObs" placeholder="Opcional"></label>
           <button class="btn" type="submit">Salvar gasto</button>
@@ -282,11 +290,11 @@ async function salvar(){
 function showTab(id,btn){document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function statusGasto(total,pago){if(pago>=total&&total>0)return['Pago','pago'];if(pago>0)return['Parcial','parcial'];return['Pendente','pendente'];}
 function statusClass(s){if(s==='Concluído'||s==='Confirmado')return'feito';if(s==='Em andamento'||s==='Pendente')return'andamento';return'pendente';}
-formGasto.addEventListener('submit',e=>{e.preventDefault();const obj={categoria:gCategoria.value,item:gItem.value,valor:+gValor.value,entrada:+gEntrada.value||0,vencimento:gVencimento.value,obs:gObs.value};editGasto!==null?(gastos[editGasto]=obj,editGasto=null):gastos.push(obj);e.target.reset();gEntrada.value=0;salvar();});
+formGasto.addEventListener('submit',e=>{e.preventDefault();const obj={categoria:gCategoria.value,item:gItem.value,valor:+gValor.value,entrada:+gEntrada.value||0,tipoCalculo:gTipoCalculo?.value||'manual',percentual:+gPercentual?.value||0,vencimento:gVencimento.value,obs:gObs.value};editGasto!==null?(gastos[editGasto]=obj,editGasto=null):gastos.push(obj);e.target.reset();gEntrada.value=0;if(typeof gPercentual!=='undefined')gPercentual.value='';salvar();});
 formConvidado.addEventListener('submit',e=>{e.preventDefault();const obj={nome:cNome.value,grupo:cGrupo.value,tipo:cTipo.value,confirmacao:cConfirmacao.value,presente:+cPresente.value||0,tipoPresente:cTipoPresente.value,obs:cObs.value};editConvidado!==null?(convidados[editConvidado]=obj,editConvidado=null):convidados.push(obj);e.target.reset();cPresente.value=0;salvar();});
 formOrcamento.addEventListener('submit',e=>{e.preventDefault();const obj={categoria:oCategoria.value,fornecedor:oFornecedor.value,valor:+oValor.value,incluso:oIncluso.value,pagamento:oPagamento.value,melhor:oMelhor.value};editOrcamento!==null?(orcamentos[editOrcamento]=obj,editOrcamento=null):orcamentos.push(obj);e.target.reset();salvar();});
 formChecklist.addEventListener('submit',e=>{e.preventDefault();const obj={categoria:kCategoria.value,tarefa:kTarefa.value,prazo:kPrazo.value,status:kStatus.value,obs:kObs.value};editChecklist!==null?(checklist[editChecklist]=obj,editChecklist=null):checklist.push(obj);e.target.reset();salvar();});
-function editarGasto(i){const g=gastos[i];editGasto=i;gCategoria.value=g.categoria;gItem.value=g.item;gValor.value=g.valor;gEntrada.value=g.entrada;gVencimento.value=g.vencimento;gObs.value=g.obs||'';showTab('gastos',document.querySelectorAll('.menu button')[1]);}
+function editarGasto(i){const g=gastos[i];editGasto=i;gCategoria.value=g.categoria;gItem.value=g.item;gValor.value=g.valor;gEntrada.value=g.entrada;gTipoCalculo.value=g.tipoCalculo||'manual';gPercentual.value=g.percentual||'';gVencimento.value=g.vencimento;gObs.value=g.obs||'';showTab('gastos',document.querySelectorAll('.menu button')[1]);}
 function excluirGasto(i){if(confirm('Excluir este gasto?')){gastos.splice(i,1);salvar();}}
 function editarConvidado(i){const c=convidados[i];editConvidado=i;cNome.value=c.nome;cGrupo.value=c.grupo;cTipo.value=c.tipo;cConfirmacao.value=c.confirmacao;cPresente.value=c.presente||0;cTipoPresente.value=c.tipoPresente||'Nenhum';cObs.value=c.obs||'';showTab('convidados',document.querySelectorAll('.menu button')[2]);}
 function excluirConvidado(i){if(confirm('Excluir este convidado?')){convidados.splice(i,1);salvar();}}
@@ -296,15 +304,46 @@ function editarChecklist(i){const k=checklist[i];editChecklist=i;kCategoria.valu
 function excluirChecklist(i){if(confirm('Excluir esta tarefa?')){checklist.splice(i,1);salvar();}}
 function render(){const total=gastos.reduce((s,g)=>s+(+g.valor||0),0),pago=gastos.reduce((s,g)=>s+(+g.entrada||0),0),falta=total-pago,presentes=convidados.reduce((s,c)=>s+(+c.presente||0),0),confirmados=convidados.filter(c=>c.confirmacao==='Confirmado').length,pendentes=convidados.filter(c=>c.confirmacao==='Pendente').length,criancas=convidados.filter(c=>c.tipo==='Criança').length;totalCasamento.textContent=money(total);totalPago.textContent=money(pago);totalFalta.textContent=money(falta);totalPresentes.textContent=money(presentes);custoLiquido.textContent=money(total-presentes);totalConvidados.textContent=convidados.length;totalConfirmados.textContent=confirmados;totalPendentes.textContent=pendentes;totalCriancas.textContent=criancas;custoConvidado.textContent=money(convidados.length?total/convidados.length:0);
 const diff=Math.ceil((DATA_CASAMENTO-new Date())/86400000);diasCasamento.textContent=diff>0?diff+' dias':`Casados há ${Math.abs(diff)} dias`;semanasCasamento.textContent=diff>0?`Aproximadamente ${Math.ceil(diff/7)} semanas restantes.`:'Que seja uma linda lembrança desse dia!';const concluidas=checklist.filter(k=>k.status==='Concluído').length, totalK=checklist.length, perc=totalK?Math.round(concluidas/totalK*100):0;barraChecklist.style.width=perc+'%';percentChecklist.textContent=perc+'%';qtdChecklist.textContent=`${concluidas}/${totalK} tarefas`;
-listaGastos.innerHTML=gastos.map((g,i)=>{const f=(+g.valor||0)-(+g.entrada||0),st=statusGasto(+g.valor,+g.entrada);return`<tr><td data-label="Categoria">${esc(g.categoria)}</td><td data-label="Item">${esc(g.item)}</td><td data-label="Total">${money(g.valor)}</td><td data-label="Pago">${money(g.entrada)}</td><td data-label="Falta">${money(f)}</td><td data-label="Vencimento">${g.vencimento||'-'}</td><td data-label="Status"><span class="status ${st[1]}">${st[0]}</span></td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarGasto(${i})">Editar</button><button class="btn danger small" onclick="excluirGasto(${i})">Excluir</button></td></tr>`}).join('');
+listaGastos.innerHTML=gastos.map((g,i)=>{const f=(+g.valor||0)-(+g.entrada||0),st=statusGasto(+g.valor,+g.entrada);return`<tr><td data-label="Categoria">${esc(g.categoria)}</td><td data-label="Item">${esc(g.item)}</td><td data-label="Total">${money(g.valor)}</td><td data-label="Pago">${money(g.entrada)}${g.tipoCalculo==="percentual"?`<br><small>${g.percentual||0}% de entrada</small>`:g.tipoCalculo==="orcamento"?`<br><small>Orçamento sem entrada</small>`:""}</td><td data-label="Falta">${money(f)}</td><td data-label="Vencimento">${g.vencimento||'-'}</td><td data-label="Status"><span class="status ${st[1]}">${st[0]}</span></td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarGasto(${i})">Editar</button><button class="btn danger small" onclick="excluirGasto(${i})">Excluir</button></td></tr>`}).join('');
 listaConvidados.innerHTML=convidados.map((c,i)=>`<tr><td data-label="Nome">${esc(c.nome)}</td><td data-label="Grupo">${esc(c.grupo)}</td><td data-label="Tipo">${esc(c.tipo)}</td><td data-label="Confirmação"><span class="status ${c.confirmacao==='Confirmado'?'sim':c.confirmacao==='Não irá'?'nao':'talvez'}">${esc(c.confirmacao)}</span></td><td data-label="Presente">${money(c.presente)}</td><td data-label="Tipo presente">${esc(c.tipoPresente||'Nenhum')}</td><td data-label="Obs.">${esc(c.obs)||'-'}</td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarConvidado(${i})">Editar</button><button class="btn danger small" onclick="excluirConvidado(${i})">Excluir</button></td></tr>`).join('');
 listaOrcamentos.innerHTML=orcamentos.map((o,i)=>`<tr><td data-label="Categoria">${esc(o.categoria)}</td><td data-label="Fornecedor">${esc(o.fornecedor)}</td><td data-label="Valor">${money(o.valor)}</td><td data-label="Incluso">${esc(o.incluso)||'-'}</td><td data-label="Pagamento">${esc(o.pagamento)||'-'}</td><td data-label="Escolhido?">${esc(o.melhor)}</td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarOrcamento(${i})">Editar</button><button class="btn danger small" onclick="excluirOrcamento(${i})">Excluir</button></td></tr>`).join('');
 listaChecklist.innerHTML=checklist.map((k,i)=>`<tr><td data-label="Categoria">${esc(k.categoria)}</td><td data-label="Tarefa">${esc(k.tarefa)}</td><td data-label="Prazo">${k.prazo||'-'}</td><td data-label="Status"><span class="status ${statusClass(k.status)}">${esc(k.status)}</span></td><td data-label="Obs.">${esc(k.obs)||'-'}</td><td data-label="Ações" class="actions"><button class="btn small" onclick="editarChecklist(${i})">Editar</button><button class="btn danger small" onclick="excluirChecklist(${i})">Excluir</button></td></tr>`).join('');
 listaPendentes.innerHTML=gastos.filter(g=>((+g.valor||0)-(+g.entrada||0))>0).map(g=>{const f=(+g.valor||0)-(+g.entrada||0),st=statusGasto(+g.valor,+g.entrada);return`<tr><td data-label="Fornecedor/Item">${esc(g.item)}</td><td data-label="Categoria">${esc(g.categoria)}</td><td data-label="Falta pagar">${money(f)}</td><td data-label="Vencimento">${g.vencimento||'-'}</td><td data-label="Status"><span class="status ${st[1]}">${st[0]}</span></td></tr>`}).join('');}
 function exportarDados(){const dados={gastos,convidados,orcamentos,checklist,exportadoEm:new Date().toLocaleString('pt-BR')};const blob=new Blob([JSON.stringify(dados,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-casamento-yasmin-brayan.json';a.click();}
 function limparTudo(){if(confirm('Tem certeza que deseja apagar todos os dados?')){gastos=[];convidados=[];orcamentos=[];checklist=[];salvar();}}
+
+function calcularEntradaPercentual(){
+  if(typeof gTipoCalculo === 'undefined') return;
+  const tipo = gTipoCalculo.value;
+  const valorTotal = Number(gValor.value || 0);
+  const percentual = Number(gPercentual.value || 0);
+
+  if(tipo === 'percentual'){
+    gEntrada.value = ((valorTotal * percentual) / 100).toFixed(2);
+    gEntrada.readOnly = true;
+  }else if(tipo === 'orcamento'){
+    gEntrada.value = 0;
+    gPercentual.value = 0;
+    gEntrada.readOnly = true;
+  }else{
+    gEntrada.readOnly = false;
+  }
+}
+
+document.addEventListener('input', function(e){
+  if(e.target && ['gValor','gPercentual'].includes(e.target.id)){
+    calcularEntradaPercentual();
+  }
+});
+
+document.addEventListener('change', function(e){
+  if(e.target && e.target.id === 'gTipoCalculo'){
+    calcularEntradaPercentual();
+  }
+});
+
 Object.assign(window,{
-  showTab,
+  showTab, calcularEntradaPercentual,
   editarGasto, excluirGasto,
   editarConvidado, excluirConvidado,
   editarOrcamento, excluirOrcamento,
